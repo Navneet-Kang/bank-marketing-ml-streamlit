@@ -12,11 +12,24 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
-
+from sklearn.base import BaseEstimator, TransformerMixin
 
 
 st.set_page_config(page_title="ML Assignment 2 - Model Comparison", layout="wide")
 st.title(" Bank Marketing — Classification Model Comparison (Streamlit App)")
+
+
+
+
+class DenseTransformer(BaseEstimator, TransformerMixin):
+    """Convert sparse matrices to dense arrays (needed for GaussianNB pipeline)."""
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        if hasattr(X, "toarray"):
+            return X.toarray()
+        return np.array(X)
 
 
 def read_csv_safely(file_obj_or_path):
